@@ -1,0 +1,11 @@
+{
+  "name": "talentquest",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "yarn workspace mobile",
+    "server": "yarn workspace server"
+  }
+}
