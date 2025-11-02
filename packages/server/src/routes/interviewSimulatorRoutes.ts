@@ -3,7 +3,7 @@ import { getInterviewSimulations, createInterviewSimulation } from '../controlle
 
 const router = Router();
 
-router.get('/:userId', getInterviewSimulations);
+router.get('/', getInterviewSimulations);
 router.post('/', createInterviewSimulation);
 
 export default router;

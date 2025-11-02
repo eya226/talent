@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Linking } from 'react-native';
 import { get } from '../api';
 
 interface Resource {
@@ -19,19 +19,23 @@ const ResourceHubScreen = () => {
             .catch(error => console.error(error));
     }, []);
 
+    const renderItem = ({ item }: { item: Resource }) => (
+        <View style={styles.resourceContainer}>
+            <Text style={styles.resourceTitle}>{item.title}</Text>
+            <Text>{item.description}</Text>
+            <Text style={styles.resourceUrl} onPress={() => Linking.openURL(item.url)}>
+                {item.url}
+            </Text>
+        </View>
+    );
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Resource Hub</Text>
             <FlatList
                 data={resources}
                 keyExtractor={item => item._id}
-                renderItem={({ item }) => (
-                    <View style={styles.resourceContainer}>
-                        <Text style={styles.resourceTitle}>{item.title}</Text>
-                        <Text>{item.description}</Text>
-                        <Text style={styles.resourceUrl}>{item.url}</Text>
-                    </View>
-                )}
+                renderItem={renderItem}
             />
         </View>
     );
@@ -49,6 +53,10 @@ const styles = StyleSheet.create({
     },
     resourceContainer: {
         marginBottom: 20,
+        padding: 10,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
     },
     resourceTitle: {
         fontSize: 18,
@@ -57,6 +65,7 @@ const styles = StyleSheet.create({
     resourceUrl: {
         color: 'blue',
         textDecorationLine: 'underline',
+        marginTop: 5,
     },
 });
 

@@ -11,6 +11,7 @@ import scrapingRoutes from './routes/scrapingRoutes';
 import documentGenerationRoutes from './routes/documentGenerationRoutes';
 import applicationRoutes from './routes/applicationRoutes';
 import resourceRoutes from './routes/resourceRoutes';
+import interviewSimulatorRoutes from './routes/interviewSimulatorRoutes';
 
 dotenv.config();
 
@@ -101,6 +102,7 @@ app.use('/scrape', authMiddleware, scrapingRoutes);
 app.use('/generate-documents', authMiddleware, documentGenerationRoutes);
 app.use('/applications', authMiddleware, applicationRoutes);
 app.use('/resources', authMiddleware, resourceRoutes);
+app.use('/interview-simulator', authMiddleware, interviewSimulatorRoutes);
 
 
 app.listen(port, () => {

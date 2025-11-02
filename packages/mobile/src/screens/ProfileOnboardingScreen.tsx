@@ -14,11 +14,15 @@ const ProfileOnboardingScreen = () => {
     }, []);
 
     const handleSendMessage = () => {
-        setChatHistory([...chatHistory, { user: 'You', text: message }]);
+        const userMessage = { user: 'You', text: message };
+        setChatHistory(prevChatHistory => [...prevChatHistory, userMessage]);
         // This is a placeholder for the profile building logic.
         post('/ai-mentor/profile', { message: { text: message } })
             .then(response => response.json())
-            .then(data => setChatHistory([...chatHistory, { user: 'You', text: message }, { user: 'Aria', text: data.text }]))
+            .then(data => {
+                const ariaMessage = { user: 'Aria', text: data.text };
+                setChatHistory(prevChatHistory => [...prevChatHistory, ariaMessage]);
+            })
             .catch(error => console.error(error));
         setMessage('');
     };
