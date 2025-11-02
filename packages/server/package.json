@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsc && node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "seed": "ts-node -r dotenv/config src/seed.ts"
+    "seed": "ts-node -r dotenv/config src/seed.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
