@@ -4,10 +4,11 @@ import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
-// Load User and Quest models
 import User from './models/User';
-import Quest from './models/Quest';
-import Job from './models/Job';
+import internshipRoutes from './routes/internshipRoutes';
+import aiMentorRoutes from './routes/aiMentorRoutes';
+import readinessPassportRoutes from './routes/readinessPassportRoutes';
+import interviewSimulatorRoutes from './routes/interviewSimulatorRoutes';
 
 dotenv.config();
 
@@ -21,9 +22,12 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as any),
 });
 
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
+if (process.env.MONGODB_URI) {
+    mongoose.connect(process.env.MONGODB_URI)
+        .then(() => console.log('MongoDB connected'))
+        .catch(err => console.log(err));
+}
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -61,8 +65,6 @@ app.post('/signup', async (req: Request, res: Response) => {
     const newUser = new User({
         uid: userRecord.uid,
         email,
-        xp: 0,
-        completedQuests: [],
     });
     await newUser.save();
 
@@ -91,96 +93,10 @@ app.post('/logout', (req: Request, res: Response) => {
     res.redirect('/');
 });
 
-
-app.post('/chat', (req: Request, res: Response) => {
-  const { message } = req.body;
-  const userMessage = message.text.toLowerCase();
-  let responseText;
-
-  if (userMessage.includes('hello') || userMessage.includes('hi')) {
-    responseText = 'Hello! My name is Aria. What is your name?';
-  } else if (userMessage.includes('name is')) {
-    responseText = `Nice to meet you! What are your career goals?`;
-  } else if (userMessage.includes('developer') || userMessage.includes('engineer') || userMessage.includes('coder')) {
-    responseText = `That's a great goal! I can help you with that. Let's start by playing a game to assess your skills.`;
-  } else {
-    responseText = "I'm not sure how to respond to that. Could you tell me about your career goals?";
-  }
-
-  const responseMessage = {
-    _id: new Date().getTime(),
-    text: responseText,
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: 'Aria',
-    },
-  };
-  res.status(200).send(responseMessage);
-});
-
-app.get('/users', authMiddleware, async (req: Request, res: Response) => {
-    const users = await User.find();
-    res.status(200).send(users);
-});
-
-app.get('/user', authMiddleware, async (req: Request, res: Response) => {
-    const user = await User.findOne({ uid: (req as any).user.uid });
-    if (!user) {
-        return res.status(404).send({ error: 'User not found' });
-    }
-    res.status(200).send(user);
-});
-
-app.get('/quests', authMiddleware, async (req: Request, res: Response) => {
-    const quests = await Quest.find();
-    res.status(200).send(quests);
-});
-
-app.post('/quests/complete', authMiddleware, async (req: Request, res: Response) => {
-  const { questId } = req.body;
-  const user = await User.findOne({ uid: (req as any).user.uid });
-  const quest = await Quest.findById(questId);
-
-  if (!user || !quest) {
-    return res.status(404).send({ error: 'User or quest not found' });
-  }
-
-  if (user.completedQuests.includes(questId)) {
-    return res.status(400).send({ error: 'Quest already completed' });
-  }
-
-  user.xp += quest.xp;
-  user.completedQuests.push(questId);
-  await user.save();
-
-  res.status(200).send(user);
-});
-
-app.get('/jobs', authMiddleware, async (req: Request, res: Response) => {
-    const jobs = await Job.find();
-    res.status(200).send(jobs);
-});
-
-app.get('/jobs/match', authMiddleware, async (req: Request, res: Response) => {
-    const user = await User.findOne({ uid: (req as any).user.uid }).populate('completedQuests');
-
-    if (!user) {
-        return res.status(404).send({ error: 'User not found' });
-    }
-
-    const allJobs = await Job.find();
-    const matchedJobs = allJobs.filter(job => {
-        const hasEnoughXp = user.xp >= job.requiredXp;
-        const hasCompletedRequiredQuests = job.requiredQuests.every(requiredQuest =>
-            user.completedQuests.some(completedQuest => completedQuest.equals(requiredQuest))
-        );
-        return hasEnoughXp && hasCompletedRequiredQuests;
-    });
-
-    res.status(200).send(matchedJobs);
-});
-
+app.use('/internships', authMiddleware, internshipRoutes);
+app.use('/ai-mentor', authMiddleware, aiMentorRoutes);
+app.use('/readiness-passport', authMiddleware, readinessPassportRoutes);
+app.use('/interview-simulator', authMiddleware, interviewSimulatorRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
