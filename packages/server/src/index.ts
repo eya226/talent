@@ -7,8 +7,10 @@ import cookieParser from 'cookie-parser';
 import User from './models/User';
 import internshipRoutes from './routes/internshipRoutes';
 import aiMentorRoutes from './routes/aiMentorRoutes';
-import readinessPassportRoutes from './routes/readinessPassportRoutes';
-import interviewSimulatorRoutes from './routes/interviewSimulatorRoutes';
+import scrapingRoutes from './routes/scrapingRoutes';
+import documentGenerationRoutes from './routes/documentGenerationRoutes';
+import applicationRoutes from './routes/applicationRoutes';
+import resourceRoutes from './routes/resourceRoutes';
 
 dotenv.config();
 
@@ -95,8 +97,11 @@ app.post('/logout', (req: Request, res: Response) => {
 
 app.use('/internships', authMiddleware, internshipRoutes);
 app.use('/ai-mentor', authMiddleware, aiMentorRoutes);
-app.use('/readiness-passport', authMiddleware, readinessPassportRoutes);
-app.use('/interview-simulator', authMiddleware, interviewSimulatorRoutes);
+app.use('/scrape', authMiddleware, scrapingRoutes);
+app.use('/generate-documents', authMiddleware, documentGenerationRoutes);
+app.use('/applications', authMiddleware, applicationRoutes);
+app.use('/resources', authMiddleware, resourceRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -1,22 +1,27 @@
-# TalentQuest – Global Internship Connect
+# TalentQuest – Global Swipe-to-Apply Internship Platform
 
-TalentQuest is a globally-accessible, AI-powered platform helping students and fresh graduates from anywhere to discover and win internships worldwide. It offers state-of-the-art readiness assessment, personalized preparation, and seamless global application tools.
+**Tagline:** *“Discover. Swipe. Apply. Track. Your global career journey starts here.”*
+
+## Goal
+
+A completely free, mobile-first internship discovery app for IT students and fresh graduates, focused on international and visa-sponsored positions. The platform uses **swipe-to-apply** for internships, auto-applies for users, and tracks every application—without any cost, paid APIs, or premium dependencies.
 
 ## Key Features
 
-*   **Global Internship Discovery & Aggregation:** Automatically scrapes and aggregates IT internships worldwide, with filters for visa sponsorship, remote/in-office, location, skills, and more.
-*   **Conversational AI Mentor ("Aria"):** Guides students through onboarding, profile building, and internship search with personalized recommendations.
-*   **Internship Readiness Passport:** Analyzes a student's profile to generate a dynamic, AI-scored “readiness passport,” visualizing their eligibility for global roles.
-*   **Interview Simulator:** An interactive AI-powered practice engine for live coding, system design, technical quizzes, and behavioral interviews.
-*   **Application Toolkit & Tracking:** Tools to create, submit, and track internship applications globally, with multilingual document support.
-*   **Resource Hub:** A collection of guides and tips for international internship processes.
+-   **Global Internship Aggregator (Web Scraping Engine):** Hand-written, modular web scraping scripts pull internship listings from a curated list of international job boards.
+-   **Swipe-to-Apply Internships:** A Tinder-style UI for browsing internships. A right swipe triggers an automated application process, including AI-generated cover letters.
+-   **AI-powered Profile & Application Document Builder:** A guided onboarding flow builds a rich student profile used to automatically generate resumes and cover letters using free Hugging Face models.
+-   **Application Tracker & Status Dashboard:** Tracks all submitted applications, including status, reminders, and communications.
+-   **Interview Simulator:** An AI-powered virtual interview simulator for various formats, using free Hugging Face models.
+-   **Resource & Guidance Hub (Free):** A collection of guides, tips, and templates for the international internship search.
 
-## Tech Stack
+## Tech Stack Constraints
 
-*   **Frontend:** React Native (without Expo), TypeScript, Tailwind CSS
-*   **Backend:** Node.js (Express), MongoDB
-*   **AI/ML:** Placeholder for Hugging Face models, Google Cloud NLP
-*   **Authentication:** Firebase Authentication
+-   **Frontend:** React Native (no Expo), TypeScript, Tailwind CSS
+-   **Backend:** Node.js (Express), MongoDB
+-   **Web Scraping:** Hand-written scripts (e.g., Puppeteer, Playwright)
+-   **AI Models:** Free Hugging Face models
+-   **Authentication:** Firebase Authentication (free tier)
 
 ## Setup
 
@@ -25,21 +30,12 @@ TalentQuest is a globally-accessible, AI-powered platform helping students and f
     git clone <repository-url>
     cd talentquest
     ```
-
 2.  **Install dependencies:**
     ```bash
     yarn install
     ```
-
 3.  **Set up environment variables:**
-    Create a `.env` file in the `packages/server` directory and add the following:
-    ```
-    MONGODB_URI=<your-mongodb-connection-string>
-    FIREBASE_PROJECT_ID=<your-firebase-project-id>
-    FIREBASE_PRIVATE_KEY=<your-firebase-private-key>
-    FIREBASE_CLIENT_EMAIL=<your-firebase-client-email>
-    ```
-
+    Create a `.env` file in `packages/server` and add the required Firebase and MongoDB credentials.
 4.  **Seed the database:**
     ```bash
     yarn workspace server seed
@@ -51,12 +47,10 @@ TalentQuest is a globally-accessible, AI-powered platform helping students and f
     ```bash
     yarn workspace server dev
     ```
-
 2.  **Start the Metro bundler:**
     ```bash
     yarn workspace mobile start &
     ```
-
 3.  **Run the mobile app:**
     ```bash
     # For Android
