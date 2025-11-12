@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import Application from '../models/Application';
 import User from '../models/User';
+import Internship from '../models/Internship';
+import { autoSubmitApplication } from '../services/applicationService';
 
 export const submitApplication = async (req: Request, res: Response) => {
     try {
@@ -10,16 +12,24 @@ export const submitApplication = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // This is a placeholder for the automated application submission logic.
-        console.log(`Submitting application for user ${user._id} to internship ${internshipId}...`);
+        const internship = await Internship.findById(internshipId);
+        if (!internship) {
+            return res.status(404).json({ message: 'Internship not found' });
+        }
 
-        const newApplication = new Application({
-            user: user._id,
-            internship: internshipId,
-        });
-        await newApplication.save();
+        const submissionSuccessful = await autoSubmitApplication(internship.url, user.profile);
 
-        res.status(201).json(newApplication);
+        if (submissionSuccessful) {
+            const newApplication = new Application({
+                user: user._id,
+                internship: internshipId,
+                status: 'submitted',
+            });
+            await newApplication.save();
+            res.status(201).json(newApplication);
+        } else {
+            res.status(500).json({ message: 'Failed to submit application' });
+        }
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
     }

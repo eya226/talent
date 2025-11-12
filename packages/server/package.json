@@ -14,7 +14,9 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "firebase-admin": "^13.5.0",
-    "mongoose": "^8.19.2"
+    "mongoose": "^8.19.2",
+    "puppeteer": "^22.15.0",
+    "@huggingface/inference": "^2.7.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
